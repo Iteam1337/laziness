@@ -9,6 +9,7 @@ module.exports = function(grunt) {
         'bower_components/mustache/mustache.js'
       ],
       code: [ 'src/js/**/*.js' ],
+      test: [ 'test/**/*.js' ]
     },
 
     jshint: {
@@ -27,7 +28,7 @@ module.exports = function(grunt) {
         }
       },
       script: {
-        src: [ 'src/js/**/*.js' ]
+        src: [ '<%= files.code %>' ]
       },
       test: {
         options: {
@@ -43,7 +44,7 @@ module.exports = function(grunt) {
             'afterEach': true
           }
         },
-        src: [ 'test/**/*.js' ]
+        src: [ '<%= files.test %>' ]
       }
     },
 
@@ -131,7 +132,7 @@ module.exports = function(grunt) {
         tasks: [ 'jshint:script', 'mocha', 'concat', 'uglify' ]
       },
       tests: {
-        files: [ 'test/*.html', 'test/unit/**/*.js' ],
+        files: [ 'test/*.html', '<%= files.test %>' ],
         tasks: [ 'jshint:test', 'mocha' ]
       },
       connect: {
