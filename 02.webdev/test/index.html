@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Lazy Mocha Tests</title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+</head>
+<body>
+
+  <div id="mocha"></div>
+
+  <script src="http://localhost:35729/livereload.js"></script>
+
+  <!-- JS from Bower components -->
+  <script src="../bower_components/jquery/dist/jquery.js"></script>
+  <script src="../bower_components/mustache/mustache.js"></script>
+
+  <!-- Test libraries -->
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script>mocha.setup('bdd');</script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script>var expect = chai.expect;</script>
+  <script src="../node_modules/sinon-chai/lib/sinon-chai.js"></script>
+  <script src="../node_modules/sinon/pkg/sinon.js"></script>
+
+  <!-- Code files -->
+  <script src="../src/js/main.js"></script>
+  <script src="../src/js/github.js"></script>
+
+  <!-- Test files -->
+  <script src="unit/main.js"></script>
+  <script src="unit/github.js"></script>
+
+  <!-- run mocha after all test are loaded -->
+  <script type="text/javascript" charset="utf-8">
+    // Only tests run in real browser, injected script run if options.run == true
+    if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+      mocha.run();
+    }
+  </script>
+  
+</body>
+</html>

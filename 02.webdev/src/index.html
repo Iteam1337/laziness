@@ -5,8 +5,51 @@
     <link rel="stylesheet" href="main.min.css" />
   </head>
   <body>
-    Hello world!
-    <script src="main.min.js"></script>
+    <div class="container">
+      <h1>Lazy GitHub feed</h1>
+      <div class="form-group">
+        <label for="username">Twitter user name</label>
+        <input type="text" class="form-control" id="username" name="username" />
+      </div>
+      <button id="feedBtn" class="btn btn-primary">Get feed</button>
+      <p />
+      <div id="result"></div>
+    </div>
+    <script id="tmpl_error" type="x-tmpl-mustache">
+      <div class="alert alert-danger">
+        <strong>Error:</strong> <code>{{status}}</code> {{statusText}}
+      </div>
+    </script>
+    <script id="tmpl_tweet" type="x-tmpl-mustache">
+      <ul class="list-group">
+        {{#feed}}
+        <li class="list-group-item">
+          <div class="media">
+            <a class="pull-left" href="#">
+              <img class="media-object" src="//gravatar.com/avatar/{{gravatar}}.jpg?s=50" alt="...">
+            </a>
+            <div class="media-body">
+              <h4 class="media-heading">
+                {{login}}
+                &gt;
+                {{repositoryName}}
+              </h4>
+               
+              {{created_at}}
+              <ul class="list-group">
+                {{#commits}}
+                <li class="list-group-item list-group-item-info">
+                  <code>{{name}}</code> {{message}}
+                </li>
+                {{/commits}}
+              </ul>
+            </div>
+          </div>
+        </li>
+        {{/feed}}
+      </ul>
+    </script>
+    <script src="js/main.js"></script>
     <script src="//localhost:35729/livereload.js"></script>
   </body>
 </html>

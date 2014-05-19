@@ -3,6 +3,14 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
+    files: {
+      libs: [
+        'bower_components/jquery/dist/jquery.js',
+        'bower_components/mustache/mustache.js'
+      ],
+      code: [ 'src/js/**/*.js' ],
+    },
+
     jshint: {
       options: {
         reporter: require('jshint-stylish'),
@@ -11,15 +19,39 @@ module.exports = function(grunt) {
         eqeqeq: true,
         eqnull: true,
         browser: true,
-        maxComplexity: 4
+        maxcomplexity: 4,
+        globals: {
+          '$': true,
+          'laziness': true,
+          'Mustache': true
+        }
       },
-      all: [ 'src/js/**/*.js' ]
+      script: {
+        src: [ 'src/js/**/*.js' ]
+      },
+      test: {
+        options: {
+          expr: true,
+          globals: {
+            'describe': true,
+            'xdescribe': true,
+            'it': true,
+            'xit': true,
+            'before': true,
+            'beforeEach': true,
+            'after': true,
+            'afterEach': true
+          }
+        },
+        src: [ 'test/**/*.js' ]
+      }
     },
 
     mocha: {
       unit: {
         options: {
-          reporter: 'Nyan'
+          reporter: 'Spec',
+          run: true
         },
         src: [ 'test/**/*.html' ]
       }
@@ -42,17 +74,27 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\r'
       },
       dist: {
-        src: [ 'src/js/**/*.js' ],
-        dest: 'dist/main.js'
+        src: [ '<%= files.libs %>', '<%= files.code %>' ],
+        dest: 'dist/js/main.js'
       }
     },
 
     uglify: {
-
+      options: {
+        sourceMap: true,
+        sourceMapName: 'dist/js/main.map'
+      },
+      target: {
+        files: {
+          'dist/js/main.min.js': [ 'dist/js/main.js' ]
+        }
+      }
     },
 
     clean: {
-      html: [ 'dist/**/*.html' ]
+      html: [ 'dist/**/*.html' ],
+      css: [ 'dist/**/*.css' ],
+      js: [ 'dist/**/*.js' ]
     },
 
     copy: {
@@ -76,18 +118,18 @@ module.exports = function(grunt) {
 
     watch: {
       html: {
-        files: [ 'src/**/*.*' ],
+        files: [ 'src/**/*.html' ],
         tasks: [ 'clean:html', 'copy:html' ]
       },
       less: {
-        files: [ 'src/**/*.*' ],
-        tasks: [ 'less', 'clean:css', 'copy:css' ]
+        files: [ 'src/**/*.less' ],
+        tasks: [ 'less' ]
       },
       script: {
-        files: [ 'src/**/*.*' ],
-        tasks: [ 'jshint:script', 'mocha', 'concat', 'uglify', 'clean:js', 'copy:js' ]
+        files: [ '<%= files.code %>' ],
+        tasks: [ 'jshint:script', 'mocha', 'concat', 'uglify' ]
       },
-      test: {
+      tests: {
         files: [ 'test/*.html', 'test/unit/**/*.js' ],
         tasks: [ 'jshint:test', 'mocha' ]
       },
@@ -97,6 +139,12 @@ module.exports = function(grunt) {
         options: {
           livereload: true
         }
+      }
+    },
+
+    focus: {
+      dev: {
+        exclude: ['connect']
       }
     }
   });
@@ -110,8 +158,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-focus');
 
-  grunt.registerTask('build', ['copy:html']);
-  grunt.registerTask('server', ['connect', 'watch:connect']);
-  grunt.registerTask('default', []);
+  grunt.registerTask('test', [ 'jshint', 'mocha' ]);
+  grunt.registerTask('build', [ 'clean', 'less', 'concat', 'uglify', 'copy' ]);
+  grunt.registerTask('server', [ 'connect', 'watch:connect' ]);
+  grunt.registerTask('default', [ 'test', 'build', 'focus:dev' ]);
 }
