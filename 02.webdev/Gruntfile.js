@@ -195,5 +195,5 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [ 'clean', 'less', 'concat', 'uglify', 'copy' ]);
   grunt.registerTask('server', [ 'connect', 'watch:connect' ]);
   grunt.registerTask('default', [ 'test', 'build', 'focus:dev' ]);
-  grunt.registerTask('deploy', ['s3:stage']);
+  grunt.registerTask('deploy', [ 'build', 's3:stage' ]);
 }
