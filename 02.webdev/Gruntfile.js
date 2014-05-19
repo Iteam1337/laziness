@@ -2,6 +2,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
 
     pkg: grunt.file.readJSON('package.json'),
+    aws: grunt.file.readJSON('aws-keys.json'),
 
     files: {
       libs: [
@@ -148,6 +149,33 @@ module.exports = function(grunt) {
       dev: {
         exclude: ['connect']
       }
+    },
+
+    s3: {
+      options: {
+        key: '<%= aws.key %>', // Use the variables
+        secret: '<%= aws.secret %>', // You can also use env variables
+        region: 'eu-west-1',
+        access: 'public-read',
+        headers: {
+          // Two Year cache policy (1000 * 60 * 60 * 24 * 730)
+          "Cache-Control": "max-age=630720000, public"
+        },
+        gzip: true,
+        gzipExclude: [ '.jpg', '.png' ]
+      },
+      stage: {
+        options: {
+          bucket: 'laziness'
+        },
+        upload: [
+          {
+            src: 'dist/**/*',
+            rel: 'dist',
+            dest: '/'
+          }
+        ]
+      },
     }
   });
 
@@ -161,9 +189,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-focus');
+  grunt.loadNpmTasks('grunt-s3');
 
   grunt.registerTask('test', [ 'jshint', 'mocha' ]);
   grunt.registerTask('build', [ 'clean', 'less', 'concat', 'uglify', 'copy' ]);
   grunt.registerTask('server', [ 'connect', 'watch:connect' ]);
   grunt.registerTask('default', [ 'test', 'build', 'focus:dev' ]);
+  grunt.registerTask('deploy', ['s3:stage']);
 }
