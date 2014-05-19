@@ -1,12 +1,14 @@
 (function () {
 
   $(function () {
-    var container = $('#result'),
+    var input = $('#username'),
+      button = $('#feedBtn'),
+      container = $('#result'),
       tmplTweet = $('#tmpl_tweet').html(),
       tmplError = $('#tmpl_error').html();
 
-    $('#feedBtn').click(function () {
-      laziness.github.getFeed($('#username').val())
+    function loadFeed() {
+      laziness.github.getFeed(input.val())
         .done(function (data) {
           data = data
             .filter(laziness.github.pushEvents)
@@ -16,7 +18,18 @@
         .fail(function (err) {
           laziness.github.render(tmplError, err, container);
         });
+    }
+
+    button.click(loadFeed);
+
+    input.keyup(function (e) {
+      if(e.which === 13) {
+        e.preventDefault();
+        loadFeed();
+      }
     });
+
+    input.focus();
   });
 
 })();
