@@ -137,7 +137,7 @@ module.exports = function(grunt) {
         tasks: [ 'jshint:test', 'mocha' ]
       },
       connect: {
-        files: [ 'dist/**/*.*' ],
+        files: [ 'dist/**/*.*', 'test/*.html', '<%= files.test %>' ],
         tasks: [ ],
         options: {
           livereload: true
