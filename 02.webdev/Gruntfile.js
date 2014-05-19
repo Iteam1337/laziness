@@ -71,7 +71,7 @@ module.exports = function(grunt) {
 
     concat: {
       options: {
-        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd hh:mm:ss") %> */\r'
+        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\r'
       },
       dist: {
         src: [ '<%= files.libs %>', '<%= files.code %>' ],
@@ -81,6 +81,7 @@ module.exports = function(grunt) {
 
     uglify: {
       options: {
+        banner: '<%= concat.options.banner %>',
         sourceMap: true,
         sourceMapName: 'dist/js/main.map'
       },
