@@ -19,7 +19,7 @@
       commits: event.payload.commits.map(function (commit) {
         return {
           name: commit.author.name,
-          message: commit.message
+          message: commit.message.replace('\n', '<br />\n')
         };
       })
     };
